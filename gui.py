@@ -1,11 +1,22 @@
-import time
 from tkinter import *
 
 LABELS_FONT = ("Arial", 15)
 BUTTONS_FONT = ("Arial", 10)
 MAIN_MENU_BUTTONS_FONT = ("Arial", 18)
 
-def show_main_menu_screen():
+def show_add_car_page():
+    clear_screen()
+
+
+
+
+
+
+
+
+
+
+def show_main_menu_page():
     def toggle_menu():
         if menu_frame.winfo_ismapped():
             menu_frame.place_forget()
@@ -24,7 +35,6 @@ def show_main_menu_screen():
     # Rozwijane menu
     hamburger_button = Button(window, width=30, height=30,bg="white" ,image=hamburger_menu_image ,command=toggle_menu)
     hamburger_button.place(x=625, y=0)
-
 
 
     # Ramka dla rozwiniętego menu
@@ -115,8 +125,9 @@ home_image = home_image.subsample(20, 20)
 hamburger_menu_image = PhotoImage(file="hamburger_menu_img.png")
 hamburger_menu_image = hamburger_menu_image.subsample(35, 35)
 
-show_login_page()
-window.after(5000, show_main_menu_screen)
+# show_login_page()
+# window.after(5000, show_main_menu_page)
 
+show_add_car_page()
 
 window.mainloop()
