@@ -71,26 +71,28 @@ items = driver.find_elements(By.CLASS_NAME, "el-form-item")
 inputs = ["Peugeot", "kombi", "diesel"]
 ul_selectors = ['/html/body/div[17]/div[1]/div[1]/ul','/html/body/div[18]/div[1]/div[1]/ul', '/html/body/div[19]/div[1]/div[1]/ul']
 for i in range(3):
-    time.sleep(3)
+    time.sleep(1)
     type_of_form = items[i + 5]
     driver.execute_script("arguments[0].click();", type_of_form.find_element(By.TAG_NAME, "input"))
     find_and_click_option(driver, ul_selectors[i], inputs[i])
 
-time.sleep(3)
+time.sleep(1)
 
 year_form = items[8].find_element(By.TAG_NAME, "input")
 
 def click_year_form(driver, year_form):
+    driver.execute_script("window.scrollBy(0, -200);")
     try:
         year_form.click()
         time.sleep(1)
-        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", year_form)
+        # driver.execute_script("arguments[0].scrollIntoView({block: 'end'});", year_form)
+        driver.execute_script("window.scrollBy(0, -100);")
         driver.execute_script("arguments[0].click();", year_form)
     except:
         click_year_form(driver, year_form)
 
 click_year_form(driver, year_form)
-time.sleep(3)
+time.sleep(1)
 previous_year_button = driver.find_element(By.XPATH, "//button[@aria-label='Poprzedni rok']")
 next_year_button = driver.find_element(By.XPATH, "//button[@aria-label='Następny rok']")
 
@@ -157,6 +159,16 @@ for i in range(5):
     input_element = other_divs[i].find_element(By.TAG_NAME, "input")
     input_element.send_keys(inputs[i])
 
+time.sleep(2)
+type_of_form = driver.find_element(By.XPATH, '//*[@id="multicont_script_477"]/section[2]/form/div[3]/div/div[7]/div/div/div/input')
+# driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", type_of_form)
+driver.execute_script("arguments[0].click();", type_of_form)
+find_and_click_option(driver, '/html/body/div[21]/div[1]/div[1]/ul', 'Konin')
+
+next_page_button = driver.find_element(By.XPATH, '//*[@id="multicont_script_477"]/section[2]/form/div[7]/div[2]/button')
+time.sleep(2)
+go_to_next_page(driver, next_page_button)
+time.sleep(2)
 
 time.sleep(60)
 driver.quit()
