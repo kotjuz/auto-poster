@@ -18,6 +18,7 @@ def find_and_click_option(driver, ul_selector, car_name):
                 driver.execute_script("arguments[0].click();", item)
                 return
         print(f"Opcja {car_name} nie została znaleziona w liście.")
+        find_and_click_option(driver, ul_selector, car_name)
     except Exception as e:
         print(f"Błąd podczas wyszukiwania opcji: {e}")
 
@@ -62,15 +63,10 @@ sell = driver.find_element(By.XPATH, '/html/body/div[16]/div[1]/div[1]/ul/li[1]'
 driver.execute_script("arguments[0].click();", sell)
 
 time.sleep(1)
-# car_model = driver.find_element(By.XPATH, '//*[@id="multicont_script_477"]/section[2]/form/div[2]/div/div[8]/div/div/div[1]/input')
-# driver.execute_script("arguments[0].click();", type_of_ad)
-#
-# find_and_click_option(driver, "/html/body/div[15]/div[1]/div[1]/ul", "Peugeot")
+
 
 items = driver.find_elements(By.CLASS_NAME, "el-form-item")
-# marka = items[5]
-# driver.execute_script("arguments[0].click();", marka.find_element(By.TAG_NAME, "input"))
-# find_and_click_option(driver, '/html/body/div[17]/div[1]/div[1]/ul', "Peugeot")
+
 
 inputs = ["Peugeot", "kombi", "diesel"]
 ul_selectors = ['/html/body/div[17]/div[1]/div[1]/ul','/html/body/div[18]/div[1]/div[1]/ul', '/html/body/div[19]/div[1]/div[1]/ul']
@@ -79,6 +75,49 @@ for i in range(3):
     type_of_form = items[i + 5]
     driver.execute_script("arguments[0].click();", type_of_form.find_element(By.TAG_NAME, "input"))
     find_and_click_option(driver, ul_selectors[i], inputs[i])
+
+time.sleep(3)
+
+year_form = items[8].find_element(By.TAG_NAME, "input")
+
+year_form.click()
+time.sleep(1)
+driver.execute_script("arguments[0].click();", year_form)
+
+time.sleep(3)
+previous_year_button = driver.find_element(By.XPATH, "//button[@aria-label='Poprzedni rok']")
+next_year_button = driver.find_element(By.XPATH, "//button[@aria-label='Następny rok']")
+
+year_table = driver.find_element(By.CSS_SELECTOR, "table.el-year-table")
+
+tds = year_table.find_elements(By.TAG_NAME, "td")
+
+year = '2008'
+
+def change_year_table_page(year):
+    if tds[0].text > year:
+        previous_year_button.click()
+        return True
+    elif tds[9].text < year:
+        next_year_button.click()
+        return True
+    return False
+
+time.sleep(2)
+while change_year_table_page(year):
+    time.sleep(2)
+    change_year_table_page(year)
+
+for td in tds:
+    if td.text == year:
+        td.click()
+        driver.execute_script("arguments[0].click();", td)
+
+
+
+
+
+
 
 time.sleep(20)
 
