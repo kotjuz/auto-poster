@@ -5,15 +5,75 @@ BUTTONS_FONT = ("Arial", 10)
 MAIN_MENU_BUTTONS_FONT = ("Arial", 18)
 
 def show_add_car_page():
-    clear_screen()
+    def show_page1():
+        clear_screen()
+        home_button = Button(window, width=30, height=30, bg="white",  image=home_image)
+        home_button.grid(row=0, column=0, sticky="n")
+
+        empty_frame = Frame(window, width=590, height=100, bg="white")
+        empty_frame.grid(row=0, column=1)
+
+        title_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        title_entry.grid(row=1, column=1, pady=10)
+
+        title_label = Label(window, font=LABELS_FONT, text="Tytul: ", bg="white")
+        title_label.grid(row=1, column=1, sticky='w', columnspan=2)
+
+        description_entry = Text(window, width=50, height=20, font=BUTTONS_FONT)
+        description_entry.grid(row=2, column=1, pady=10)
+
+        description_label = Label(window, font=LABELS_FONT, text="Opis: ", bg="white")
+        description_label.grid(row=2, column=1, sticky='w', columnspan=2)
+
+        brand_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        brand_entry.grid(row=3, column=1, pady=10)
+
+        brand_label = Label(window, font=LABELS_FONT, text="Marka: ", bg="white")
+        brand_label.grid(row=3, column=1, sticky='w', columnspan=2)
+
+        body_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        body_entry.grid(row=4, column=1, pady=10)
+
+        body_label = Label(window, font=LABELS_FONT, text="Nadwozie: ", bg="white")
+        body_label.grid(row=4, column=1, sticky='w', columnspan=2)
+
+        fuel_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        fuel_entry.grid(row=5, column=1, pady=10)
+
+        fuel_label = Label(window, font=LABELS_FONT, text="Paliwo: ", bg="white")
+        fuel_label.grid(row=5, column=1, sticky='w', columnspan=2)
+
+        next_page_button = Button(window, text="Dalej", width=20, height=1, font=LABELS_FONT)
+        next_page_button.grid(row=6, column=1)
+
+    def show_page2():
+        clear_screen()
+        home_button = Button(window, width=30, height=30, bg="white",  image=home_image)
+        home_button.grid(row=0, column=0, sticky="n")
+
+        empty_frame = Frame(window, width=590, height=100, bg="white")
+        empty_frame.grid(row=0, column=1)
+
+        year_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        year_entry.grid(row=1, column=1, pady=10)
+
+        year_label = Label(window, font=LABELS_FONT, text="Rok produkcji: ", bg="white")
+        year_label.grid(row=1, column=1, sticky='w', columnspan=2)
+
+        mileage_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        mileage_entry.grid(row=2, column=1, pady=10)
+
+        mileage_label = Label(window, font=LABELS_FONT, text="Przebieg: ", bg="white")
+        mileage_label.grid(row=2, column=1, sticky='w', columnspan=2)
+
+        engine_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        engine_entry.grid(row=3, column=1, pady=10)
+
+        engine_label = Label(window, font=LABELS_FONT, text="Pojemnosc: ", bg="white")
+        engine_label.grid(row=3, column=1, sticky='w', columnspan=2)
 
 
-
-
-
-
-
-
+    show_page2()
 
 
 def show_main_menu_page():
@@ -116,13 +176,13 @@ window.config(bg="white", padx=20, pady=20, width=700, height=750)
 window.minsize(700, 750)
 window.maxsize(700, 750)
 
-logo_image = PhotoImage(file="login_img.png")
+logo_image = PhotoImage(file="icons/login_img.png")
 logo_image = logo_image.subsample(3, 3)
 
-home_image = PhotoImage(file="home_img.png")
+home_image = PhotoImage(file="icons/home_img.png")
 home_image = home_image.subsample(20, 20)
 
-hamburger_menu_image = PhotoImage(file="hamburger_menu_img.png")
+hamburger_menu_image = PhotoImage(file="icons/hamburger_menu_img.png")
 hamburger_menu_image = hamburger_menu_image.subsample(35, 35)
 
 # show_login_page()
