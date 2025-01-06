@@ -80,10 +80,16 @@ time.sleep(3)
 
 year_form = items[8].find_element(By.TAG_NAME, "input")
 
-year_form.click()
-time.sleep(1)
-driver.execute_script("arguments[0].click();", year_form)
+def click_year_form(driver, year_form):
+    try:
+        year_form.click()
+        time.sleep(1)
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", year_form)
+        driver.execute_script("arguments[0].click();", year_form)
+    except:
+        click_year_form(driver, year_form)
 
+click_year_form(driver, year_form)
 time.sleep(3)
 previous_year_button = driver.find_element(By.XPATH, "//button[@aria-label='Poprzedni rok']")
 next_year_button = driver.find_element(By.XPATH, "//button[@aria-label='Następny rok']")
@@ -114,12 +120,42 @@ for td in tds:
         driver.execute_script("arguments[0].click();", td)
 
 
+mileage = '176500'
+pojemnosc = '1600'
+price = '40000'
 
 
+inputs = [mileage, pojemnosc, price]
+for i in range(3):
+    input_element = items[i+10].find_element(By.TAG_NAME, "input")
+    input_element.send_keys(inputs[i])
 
 
+def go_to_next_page(driver, next_page_button):
+    try:
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", next_page_button)
+        next_page_button.click()
+    except:
+        go_to_next_page(driver, next_page_button)
 
-time.sleep(20)
+next_page_button = driver.find_element(By.XPATH, "//button[contains(@class, 'el-button--primary')]")
+time.sleep(2)
+go_to_next_page(driver, next_page_button)
+time.sleep(2)
+
+other_divs = driver.find_elements(By.XPATH, "//div[div[contains(@class, 'form__small_info')]]/div[position()>1]")
+
+# Drukowanie znalezionych divów
+imie = 'Rafal'
+email = 'rkotarski10@gmail.com'
+telefon = '537519199'
+ulica = 'Konin'
+miasto = 'Konin'
+
+inputs = [imie, email, telefon, ulica, miasto]
+for i in range(5):
+    input_element = other_divs[i].find_element(By.TAG_NAME, "input")
+    input_element.send_keys(inputs[i])
 
 
 time.sleep(60)
