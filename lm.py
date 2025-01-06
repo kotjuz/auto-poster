@@ -6,6 +6,36 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time
+import os
+
+
+def upload_images(driver, folder_name="images"):
+    folder_path = os.path.join(os.getcwd(), folder_name)
+    image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(('jpg', 'jpeg', 'png', 'gif'))]
+
+    if not image_files:
+        print("Brak zdjęć w folderze.")
+        return
+
+    for image in image_files:
+
+        file_input = driver.find_element(By.CSS_SELECTOR, "input[type='file']")
+
+        image_path = os.path.join(folder_path, image)
+
+        driver.execute_script("arguments[0].value = '';", file_input)
+        
+        file_input.send_keys(image_path)
+        print(f"Przesyłanie zdjęcia: {image_path}")
+
+        time.sleep(2)
+
+    print("Wszystkie zdjęcia zostały przesłane.")
+
+
+
+
+
 
 
 def find_and_click_option(driver, ul_selector, car_name):
@@ -169,6 +199,8 @@ next_page_button = driver.find_element(By.XPATH, '//*[@id="multicont_script_477"
 time.sleep(2)
 go_to_next_page(driver, next_page_button)
 time.sleep(2)
+
+upload_images(driver)
 
 time.sleep(60)
 driver.quit()
