@@ -1,4 +1,7 @@
 from tkinter import *
+from tkinter import filedialog, messagebox
+from PIL import Image, ImageTk
+import os
 
 LABELS_FONT = ("Arial", 15)
 BUTTONS_FONT = ("Arial", 10)
@@ -43,7 +46,7 @@ def show_add_car_page():
         fuel_label = Label(window, font=LABELS_FONT, text="Paliwo: ", bg="white")
         fuel_label.grid(row=5, column=1, sticky='w', columnspan=2)
 
-        next_page_button = Button(window, text="Dalej", width=20, height=1, font=LABELS_FONT)
+        next_page_button = Button(window, text="Dalej", width=20, height=1, font=LABELS_FONT, command=show_page2)
         next_page_button.grid(row=6, column=1)
 
     def show_page2():
@@ -57,7 +60,7 @@ def show_add_car_page():
         year_entry = Entry(window, width=50, font=BUTTONS_FONT)
         year_entry.grid(row=1, column=1, pady=10)
 
-        year_label = Label(window, font=LABELS_FONT, text="Rok produkcji: ", bg="white")
+        year_label = Label(window, font=LABELS_FONT, text="Rok prod.: ", bg="white")
         year_label.grid(row=1, column=1, sticky='w', columnspan=2)
 
         mileage_entry = Entry(window, width=50, font=BUTTONS_FONT)
@@ -72,8 +75,102 @@ def show_add_car_page():
         engine_label = Label(window, font=LABELS_FONT, text="Pojemnosc: ", bg="white")
         engine_label.grid(row=3, column=1, sticky='w', columnspan=2)
 
+        price_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        price_entry.grid(row=4, column=1, pady=10)
 
-    show_page2()
+        price_label = Label(window, font=LABELS_FONT, text="Cena: ", bg="white")
+        price_label.grid(row=4, column=1, sticky='w', columnspan=2)
+
+        author_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        author_entry.grid(row=5, column=1, pady=10)
+
+        author_label = Label(window, font=LABELS_FONT, text="Autor: ", bg="white")
+        author_label.grid(row=5, column=1, sticky='w', columnspan=2)
+
+        email_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        email_entry.grid(row=6, column=1, pady=10)
+
+        email_label = Label(window, font=LABELS_FONT, text="Email: ", bg="white")
+        email_label.grid(row=6, column=1, sticky='w', columnspan=2)
+
+        phone_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        phone_entry.grid(row=7, column=1, pady=10)
+
+        phone_label = Label(window, font=LABELS_FONT, text="Nr telefonu: ", bg="white")
+        phone_label.grid(row=7, column=1, sticky='w', columnspan=2)
+
+        city_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        city_entry.grid(row=8, column=1, pady=10)
+
+        city_label = Label(window, font=LABELS_FONT, text="Miasto: ", bg="white")
+        city_label.grid(row=8, column=1, sticky='w', columnspan=2)
+
+        next_page_button = Button(window, text="Dalej", width=20, height=1, font=LABELS_FONT, command=show_page3)
+        next_page_button.grid(row=9, column=1)
+
+    def show_page3():
+        clear_screen()
+        def upload_images():
+            file_paths = filedialog.askopenfilenames(
+                title="Select Images",
+                filetypes=[("Image Files", "*.jpg;*.jpeg;*.png;*.gif")]
+            )
+
+            if not file_paths:
+                messagebox.showinfo("Brak wyboru", "Nie wybrano żadnych zdjęć.")
+                return
+
+            for file_path in file_paths:
+                try:
+                    if len(images) >= 12:
+                        messagebox.showwarning("Limit zdjęć", "Możesz dodać maksymalnie 12 zdjęć.")
+                        break
+
+                    img = Image.open(file_path)
+                    img.thumbnail((150, 150))
+                    photo = ImageTk.PhotoImage(img)
+
+                    img_label = Label(image_frame, image=photo)
+                    img_label.image = photo
+                    img_label.grid(row=len(images) // 4, column=len(images) % 4, padx=5, pady=5)
+
+                    images.append(file_path)
+                except Exception as e:
+                    print(f"Error loading image {file_path}: {e}")
+
+        def confirm_images():
+            if not images:
+                messagebox.showwarning("Brak zdjęć", "Dodaj zdjęcia.")
+            else:
+                target_folder = os.path.join(os.getcwd(), "uploaded_images")
+                os.makedirs(target_folder, exist_ok=True)
+
+                for image_path in images:
+                    try:
+                        file_name = os.path.basename(image_path)
+                        target_path = os.path.join(target_folder, file_name)
+                        with open(image_path, "rb") as src_file:
+                            with open(target_path, "wb") as dest_file:
+                                dest_file.write(src_file.read())
+                    except Exception as e:
+                        print(f"Error saving image {image_path}: {e}")
+
+                messagebox.showinfo("Zdjęcia zatwierdzone", f"Zapisano zdjęcia")
+                show_main_menu_page()
+
+
+        upload_button = Button(window, text="Załącz zdjęcia", command=upload_images, font=("Arial", 12))
+        upload_button.pack(pady=10)
+
+        image_frame = Frame(window)
+        image_frame.pack(pady=10)
+
+        confirm_button = Button(window, text="Zatwierdź zdjęcia", command=confirm_images, font=("Arial", 12))
+        confirm_button.pack(pady=10)
+
+        images = []
+
+    show_page1()
 
 
 def show_main_menu_page():
@@ -120,7 +217,7 @@ def show_main_menu_page():
     main_menu_frame.place(x=120, y=450)
 
     # Elementy menu glownego
-    add_car_button = Button(main_menu_frame, text="Dodaj auto", font=MAIN_MENU_BUTTONS_FONT, width=30)
+    add_car_button = Button(main_menu_frame, text="Dodaj auto", font=MAIN_MENU_BUTTONS_FONT, width=30, command=show_add_car_page)
     add_car_button.grid(row=0, column=0, padx=10, pady=4)
 
     post_car_button = Button(main_menu_frame, text="Ogloś auto", font=MAIN_MENU_BUTTONS_FONT, width=30)
@@ -188,6 +285,6 @@ hamburger_menu_image = hamburger_menu_image.subsample(35, 35)
 # show_login_page()
 # window.after(5000, show_main_menu_page)
 
-show_add_car_page()
+show_main_menu_page()
 
 window.mainloop()
