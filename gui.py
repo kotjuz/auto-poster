@@ -10,7 +10,7 @@ MAIN_MENU_BUTTONS_FONT = ("Arial", 18)
 def show_add_car_page():
     def show_page1():
         clear_screen()
-        home_button = Button(window, width=30, height=30, bg="white",  image=home_image)
+        home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=show_main_menu_page)
         home_button.grid(row=0, column=0, sticky="n")
 
         empty_frame = Frame(window, width=590, height=100, bg="white")
@@ -51,7 +51,7 @@ def show_add_car_page():
 
     def show_page2():
         clear_screen()
-        home_button = Button(window, width=30, height=30, bg="white",  image=home_image)
+        home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=show_main_menu_page)
         home_button.grid(row=0, column=0, sticky="n")
 
         empty_frame = Frame(window, width=590, height=100, bg="white")
@@ -110,6 +110,8 @@ def show_add_car_page():
 
     def show_page3():
         clear_screen()
+        home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=show_main_menu_page)
+        home_button.place(x=0, y=0)
         def upload_images():
             file_paths = filedialog.askopenfilenames(
                 title="Select Images",
