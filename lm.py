@@ -87,7 +87,7 @@ mileage = '176500'
 pojemnosc = '1600'
 price = '40000'
 year = '2017'
-descripiton = """Witam,
+des = """Witam,
 Mam na sprzedaż pięknego Peugeota 308 w wersji po lifcie. Samochód jest w całości w oryginalnym lakierze i prezentuje się naprawdę świetnie. Ma nowe opony letnie Michelin i ładne alufelgi, które doskonale komponują się z jego wyglądem.
 
 Peugeot posiada bogate wyposażenie, w tym:
@@ -105,7 +105,7 @@ Spalanie jest bardzo niskie – około 5 l/100 km w trasie i 6 l/100 km w mieśc
 
 Zapraszam do kontaktu oraz na jazdę próbną. Kontakt: 537-519-199"""
 
-des = "Ladny"
+descripiton = "Ladny"
 
 service = Service(executable_path="chromedriver.exe")
 driver = webdriver.Chrome(service=service)
@@ -228,3 +228,4 @@ driver.execute_script("arguments[0].click();", checkbox)
 
 time.sleep(60)
 driver.quit()
+
