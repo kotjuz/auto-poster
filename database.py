@@ -45,6 +45,7 @@ class Database():
 
         self.c.execute("""CREATE TABLE Cars(
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            VIN TEXT,
             images_directory_path TEXT,
             description TEXT,
             car_brand TEXT,
