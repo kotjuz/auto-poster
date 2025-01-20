@@ -18,13 +18,14 @@ class Database():
         self.conn.commit()
 
     def add_new_car(self, car_data, username):
+        car_data["user_id"] = username
         self.c.execute("""
         INSERT INTO Cars (
             username, images_directory_path, description, car_brand, car_body, fuel_type,
-            year, mileage, engine, price, author, email, phone_number, city
+            year, mileage, engine, price, author, email, phone_number, city, user_id
         ) VALUES (
             :username, :images_directory_path, :description, :car_brand, :car_body, :fuel_type,
-            :year, :mileage, :engine, :price, :author, :email, :phone_number, :city
+            :year, :mileage, :engine, :price, :author, :email, :phone_number, :city.  :user_id
         )
         """, car_data)
 
