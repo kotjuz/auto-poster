@@ -18,16 +18,21 @@ class Database():
         self.conn.commit()
 
     def add_new_car(self, car_data, username):
-        car_data["user_id"] = username
+        car_data["username"] = username
         self.c.execute("""
         INSERT INTO Cars (
-            username, images_directory_path, description, car_brand, car_body, fuel_type,
+            VIN, username, images_directory_path, description, car_brand, car_body, fuel_type,
             year, mileage, engine, price, author, email, phone_number, city, user_id
         ) VALUES (
-            :username, :images_directory_path, :description, :car_brand, :car_body, :fuel_type,
-            :year, :mileage, :engine, :price, :author, :email, :phone_number, :city.  :user_id
-        )
+            :VIN, :username, :images_directory_path, :description, :car_brand, :car_body, :fuel_type,
+            :year, :mileage, :engine, :price, :author, :email, :phone_number, :city
+                    )
         """, car_data)
+        self.conn.commit()
+
+    def delete_car(self, car_data):
+        self.c.execute("DELETE from Cars WHERE VIN = ?", (car_data["VIN"],))
+        self.conn.commit()
 
     def create_empty_database(self):
         self.c.execute("""CREATE TABLE Users (
