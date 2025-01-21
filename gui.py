@@ -105,8 +105,14 @@ def show_add_car_page():
         city_label = Label(window, font=LABELS_FONT, text="Miasto: ", bg="white")
         city_label.grid(row=8, column=1, sticky='w', columnspan=2)
 
+        vin_entry = Entry(window, width=50, font=BUTTONS_FONT)
+        vin_entry.grid(row=9, column=1, pady=10)
+
+        vin_label = Label(window, font=LABELS_FONT, text="VIN: ", bg="white")
+        vin_label.grid(row=9, column=1, sticky='w', columnspan=2)
+
         next_page_button = Button(window, text="Dalej", width=20, height=1, font=LABELS_FONT, command=show_page3)
-        next_page_button.grid(row=9, column=1)
+        next_page_button.grid(row=10, column=1)
 
     def show_page3():
         clear_screen()
