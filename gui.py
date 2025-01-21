@@ -69,17 +69,26 @@ def show_add_car_page():
         mileage_label = Label(window, font=LABELS_FONT, text="Przebieg: ", bg="white")
         mileage_label.grid(row=2, column=1, sticky='w', columnspan=2)
 
+        km_label = Label(window, font=BUTTONS_FONT, text="km", bg="white")
+        km_label.place(x=510, y=150)
+
         engine_entry = Entry(window, width=50, font=BUTTONS_FONT)
         engine_entry.grid(row=3, column=1, pady=10)
 
         engine_label = Label(window, font=LABELS_FONT, text="Pojemnosc: ", bg="white")
         engine_label.grid(row=3, column=1, sticky='w', columnspan=2)
 
+        cm_label = Label(window, font=BUTTONS_FONT, text="cm", bg="white")
+        cm_label.place(x=510, y=190)
+
         price_entry = Entry(window, width=50, font=BUTTONS_FONT)
         price_entry.grid(row=4, column=1, pady=10)
 
         price_label = Label(window, font=LABELS_FONT, text="Cena: ", bg="white")
         price_label.grid(row=4, column=1, sticky='w', columnspan=2)
+
+        pln_label = Label(window, font=BUTTONS_FONT, text="zl", bg="white")
+        pln_label.place(x=510, y=230)
 
         author_entry = Entry(window, width=50, font=BUTTONS_FONT)
         author_entry.grid(row=5, column=1, pady=10)
