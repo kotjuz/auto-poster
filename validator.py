@@ -27,7 +27,8 @@ class Validator():
 
     @staticmethod
     def validate_fuel(fuel):
-        if not fuel.isalpha() or len(fuel) > 20:
+        possible = ["diesel", "benzyna", "hybryda", "elektryczny"]
+        if not fuel.isalpha() or len(fuel) > 20 or fuel not in possible:
             return False
         return True
 
@@ -43,4 +44,20 @@ class Validator():
             return False
         return True
 
-    
+    @staticmethod
+    def validate_engine(engine):
+        if not engine.isdigit() or not (40 < int(engine) < 10000):
+            return False
+        return True
+
+    @staticmethod
+    def validate_price(price):
+        if not price.isdigit() or not (0 < int(price)):
+            return False
+        return True
+
+    @staticmethod
+    def validate_author(author):
+        if not author.isalpha() or not (2 < len(author) < 15):
+            return False
+        return True
