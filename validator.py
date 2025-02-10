@@ -1,4 +1,5 @@
 import datetime
+import re
 
 class Validator():
     @staticmethod
@@ -61,3 +62,19 @@ class Validator():
         if not author.isalpha() or not (2 < len(author) < 15):
             return False
         return True
+
+    @staticmethod
+    def validate_email(email):
+        pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
+        match = re.search(pattern, email)
+        if match:
+            return True
+        return False
+
+    @staticmethod
+    def validate_phone_number(phone_number):
+        pattern = r'[4-8][0-9]{8}'
+        match = re.search(pattern, phone_number)
+        if match:
+            return True
+        return False
