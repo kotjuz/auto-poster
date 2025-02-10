@@ -4,13 +4,15 @@ import re
 class Validator():
     @staticmethod
     def validate_title(title):
-        if not title.isalpha() or len(title) > 60:
+        pattern = r'^(?=.*[A-Za-zĄąĆćĘęŁłÓóŚśŹźŻż0-9])[A-Za-z0-9ĄąĆćĘęŁłÓóŚśŹźŻż .,!\-]{2,60}$'
+        match = re.search(pattern, title)
+        if not match:
             return False
         return True
 
     @staticmethod
     def validate_description(description):
-        if not description.isalpha() or len(description) > 2000:
+        if len(description) > 2000 or len(description) < 10:
             return False
         return True
 
@@ -22,7 +24,8 @@ class Validator():
 
     @staticmethod
     def validate_body(body):
-        if not body.isalpha() or len(body) > 15:
+        possible = ["kombi", "sedan", "hatchback", "coupe", "cabrio", "suv", "inne"]
+        if not body.isalpha() or len(body) > 15 or body not in possible:
             return False
         return True
 
@@ -67,14 +70,14 @@ class Validator():
     def validate_email(email):
         pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
         match = re.search(pattern, email)
-        if match:
-            return True
-        return False
+        if not match:
+            return False
+        return True
 
     @staticmethod
     def validate_phone_number(phone_number):
         pattern = r'[4-8][0-9]{8}'
         match = re.search(pattern, phone_number)
-        if match:
-            return True
-        return False
+        if not match:
+            return False
+        return True

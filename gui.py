@@ -1,13 +1,18 @@
 from tkinter import *
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
+from validator import Validator
+import datetime
 import os
 
 LABELS_FONT = ("Arial", 15)
 BUTTONS_FONT = ("Arial", 10)
 MAIN_MENU_BUTTONS_FONT = ("Arial", 18)
 
+validator = Validator()
+
 def show_add_car_page():
+    car_data = {}
     def show_page1():
         clear_screen()
         home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=show_main_menu_page)
@@ -46,8 +51,74 @@ def show_add_car_page():
         fuel_label = Label(window, font=LABELS_FONT, text="Paliwo: ", bg="white")
         fuel_label.grid(row=5, column=1, sticky='w', columnspan=2)
 
-        next_page_button = Button(window, text="Dalej", width=20, height=1, font=LABELS_FONT, command=show_page2)
+        def validate_data():
+            errors = 0
+
+            title = title_entry.get()
+            if validator.validate_title(title):
+                car_data['title'] = title
+            elif len(title) < 2:
+                messagebox.showwarning("Bląd.", "Dodaj tytul.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.","Bląd w tytule. Tytul nie może zawierać polskich znaków oraz znaków specjalnych."
+                                       " Dlugość nie może przekraczać 60 znaków.")
+                errors += 1
+
+            description = description_entry.get("1.0", "end-1c")
+            if validator.validate_description(description):
+                car_data['description'] = description
+            elif len(description) < 10:
+                messagebox.showwarning("Bląd.", "Dodaj opis.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.", "Bląd w opisie. Dlugość nie może przekraczać 2000 znaków.")
+                errors += 1
+
+            brand = brand_entry.get()
+            if validator.validate_brand(brand):
+                car_data['brand'] = brand
+            elif len(brand) < 2:
+                messagebox.showwarning("Bląd.", "Dodaj markę.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.","Bląd w marce. Dlugość nie może przekraczać 15 znaków.")
+                errors += 1
+
+            body = body_entry.get()
+            if validator.validate_body(body):
+                car_data['body'] = body
+            elif len(body) < 3:
+                messagebox.showwarning("Bląd.", "Dodaj nadwozie.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.","Bląd w nadwoziu. Dostępne opcje: \n"
+                                               "kombi, sedan, hatchback, coupe, cabrio, suv, inne")
+                errors += 1
+
+            fuel = fuel_entry.get()
+            if validator.validate_fuel(fuel):
+                car_data['fuel'] = fuel
+            elif len(fuel) < 3:
+                messagebox.showwarning("Bląd.", "Dodaj paliwo.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.","Bląd w paliwie. Dostępne opcje: \n"
+                                               "diesel, benzyna, hybryda, elektryczny")
+                errors += 1
+
+            if errors > 0:
+                return
+            else:
+                print(car_data)
+                show_page2()
+
+
+        next_page_button = Button(window, text="Dalej", width=20, height=1, font=LABELS_FONT, command=validate_data)
         next_page_button.grid(row=6, column=1)
+
+
+
 
     def show_page2():
         clear_screen()
@@ -120,7 +191,27 @@ def show_add_car_page():
         vin_label = Label(window, font=LABELS_FONT, text="VIN: ", bg="white")
         vin_label.grid(row=9, column=1, sticky='w', columnspan=2)
 
-        next_page_button = Button(window, text="Dalej", width=20, height=1, font=LABELS_FONT, command=show_page3)
+        def validate_data():
+            errors = 0
+
+            year = year_entry.get()
+            if validator.validate_year(year):
+                car_data['year'] = year
+            elif len(year) < 2:
+                messagebox.showwarning("Bląd.", "Dodaj rok produkcji.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.",f"Bląd w roku produkcji. Rok musi być z przedzialu 1900 - {datetime.datetime.now().year}")
+                errors += 1
+
+
+            if errors > 0:
+                return
+            else:
+                print(car_data)
+                show_page3()
+
+        next_page_button = Button(window, text="Dalej", width=20, height=1, font=LABELS_FONT, command=validate_data)
         next_page_button.grid(row=10, column=1)
 
     def show_page3():
@@ -187,7 +278,7 @@ def show_add_car_page():
 
         images = []
 
-    show_page1()
+    show_page2()
 
 
 def show_main_menu_page():
@@ -302,6 +393,7 @@ hamburger_menu_image = hamburger_menu_image.subsample(35, 35)
 # show_login_page()
 # window.after(5000, show_main_menu_page)
 
-show_main_menu_page()
+# show_main_menu_page()
+show_add_car_page()
 
 window.mainloop()
