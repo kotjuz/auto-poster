@@ -13,6 +13,7 @@ MAIN_MENU_BUTTONS_FONT = ("Arial", 18)
 validator = Validator()
 db = Database()
 
+
 def show_add_car_page():
     car_data = {}
     def show_page1():
@@ -447,7 +448,7 @@ def show_login_page():
     password_label.grid(row=2, column=0, sticky="e")
 
     # Pole tekstowe dla hasła
-    password_entry = Entry(window, width=30, font=LABELS_FONT)
+    password_entry = Entry(window, width=30, font=LABELS_FONT, show="*")
     password_entry.grid(row=2, column=1, ipady=3)
 
     # Przycisk logowania
@@ -455,8 +456,82 @@ def show_login_page():
     sign_in_button.grid(row=3, column=1)
 
     # Przycisk rejestracji
-    sign_up_button = Button(window, text="Zarejestruj się", width=30, height=1, font=BUTTONS_FONT)
+    sign_up_button = Button(window, text="Zarejestruj się", width=30, height=1, font=BUTTONS_FONT, command=show_sign_up_page)
     sign_up_button.grid(row=4, column=1)
+
+def show_sign_up_page():
+    clear_screen()
+
+    empty_label = Frame(window, width=700, height=400, bg="white", padx=0, pady=0)
+    empty_label.grid(row=0, column=0, columnspan=3)
+
+    logo_label_label = Label(empty_label, image=logo_image)
+    logo_label_label.place(relx=0.5, rely=0.5, anchor="center")
+
+    login_label = Label(window, text="login:", bg="white", pady=5, font=LABELS_FONT)
+    login_label.grid(row=1, column=0, sticky="e")
+
+    login_entry = Entry(window, width=30, font=LABELS_FONT)
+    login_entry.grid(row=1, column=1, ipady=3)
+    login_entry.focus_set()
+
+    password_label = Label(window, text="hasło:", bg="white", pady=5, font=LABELS_FONT)
+    password_label.grid(row=2, column=0, sticky="e")
+
+    password_entry = Entry(window, width=30, font=LABELS_FONT, show="*")
+    password_entry.grid(row=2, column=1, ipady=3)
+
+    email_label = Label(window, text="email:", bg="white", pady=5, font=LABELS_FONT)
+    email_label.grid(row=3, column=0, sticky="e")
+
+    email_entry = Entry(window, width=30, font=LABELS_FONT)
+    email_entry.grid(row=3, column=1, ipady=3)
+
+    def validate_data():
+        login = login_entry.get()
+        password = password_entry.get()
+        email = email_entry.get()
+        errors = 0
+
+        if len(login) == 0:
+            messagebox.showwarning("Bląd.", "Podaj login.")
+            errors += 1
+        elif not validator.validate_login(login):
+            messagebox.showwarning("Bląd.", "Bląd w polu 'login'. Login może zawierać tylko male, duże litery (bez polskich znaków) \n "
+                                            "oraz cyfry. Dlugość musi mieścić się w przedziale 4-20 znaków.")
+            errors += 1
+
+        if len(password) == 0:
+            messagebox.showwarning("Bląd.", "Podaj haslo.")
+            errors += 1
+        elif not validator.validate_password(password):
+            messagebox.showwarning("Bląd.",
+                                   "Bląd w polu 'haslo'. Haslo musi zawierać min. 1 malą, 1 dużą literę oraz 1 cyrę. \n "
+                                   "Dlugość musi mieścić się w przedziale 6-20 znaków.")
+            errors += 1
+
+        if len(email) == 0:
+            messagebox.showwarning("Bląd.", "Podaj email.")
+            errors += 1
+        elif not validator.validate_password(password):
+            messagebox.showwarning("Bląd.",
+                                   "Bląd w polu 'email'. Niepoprawny adres email.")
+            errors += 1
+
+        if errors == 0:
+            db.add_new_user(login, password, email)
+            messagebox.showinfo("Sukces", "Pomyślnie utworzono konto. Teraz możesz się zalogować.")
+            show_login_page()
+        else:
+            return
+
+
+    sign_up_button = Button(window, text="Utwórz konto", width=30, height=1, font=BUTTONS_FONT, command=validate_data)
+    sign_up_button.grid(row=4, column=1)
+
+    go_back_button = Button(window, width=30, height=30, bg="white",  image=back_arrow_image, command=show_login_page)
+    go_back_button.place(x=0, y=0)
+
 
 def clear_screen():
     for widget in window.winfo_children():
@@ -478,10 +553,13 @@ home_image = home_image.subsample(20, 20)
 hamburger_menu_image = PhotoImage(file="icons/hamburger_menu_img.png")
 hamburger_menu_image = hamburger_menu_image.subsample(35, 35)
 
+back_arrow_image = PhotoImage(file="icons/back_arrow.png")
+back_arrow_image = back_arrow_image.subsample(25, 25)
+
 # show_login_page()
 # window.after(5000, show_main_menu_page)
 
-show_main_menu_page()
+show_login_page()
 
 
 window.mainloop()

@@ -99,3 +99,19 @@ class Validator():
         if not match:
             return False
         return True
+
+    @staticmethod
+    def validate_login(login):
+        pattern = r'^[a-zA-Z0-9]{4,20}$'
+        match = re.search(pattern, login)
+        if not match:
+            return False
+        return True
+
+    @staticmethod
+    def validate_password(password):
+        pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,20}$'
+        match = re.search(pattern, password)
+        if not match:
+            return False
+        return True

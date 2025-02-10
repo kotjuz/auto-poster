@@ -8,8 +8,8 @@ class Database():
         self.c.execute("PRAGMA foreign_keys = ON")
 
 
-    def add_new_user(self, user_data):
-        data_tuple = (user_data["username"], user_data["password"], user_data["email_address"])
+    def add_new_user(self, username, password, email_address):
+        data_tuple = (username, password, email_address)
         self.c.execute("INSERT INTO Users (username, password, email_address) VALUES (?,?,?)", data_tuple)
         self.conn.commit()
 
