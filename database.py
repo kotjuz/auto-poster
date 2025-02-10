@@ -21,11 +21,11 @@ class Database():
         car_data["username"] = username
         self.c.execute("""
         INSERT INTO Cars (
-            VIN, username, images_directory_path, description, car_brand, car_body, fuel_type,
-            year, mileage, engine, price, author, email, phone_number, city, user_id
+            VIN, images_directory_path, description, car_brand, car_body, fuel_type,
+            year, miles, engine, price, author, email, phone_number, city, user_id
         ) VALUES (
-            :VIN, :username, :images_directory_path, :description, :car_brand, :car_body, :fuel_type,
-            :year, :mileage, :engine, :price, :author, :email, :phone_number, :city
+            :VIN, :images_directory_path, :description, :brand, :body, :fuel,
+            :year, :mileage, :engine, :price, :author, :email, :phone_number, :city, :user_id
                     )
         """, car_data)
         self.conn.commit()

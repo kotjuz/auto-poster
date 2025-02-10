@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 from validator import Validator
+from database import Database
 import datetime
 import os
 
@@ -10,6 +11,7 @@ BUTTONS_FONT = ("Arial", 10)
 MAIN_MENU_BUTTONS_FONT = ("Arial", 18)
 
 validator = Validator()
+db = Database()
 
 def show_add_car_page():
     car_data = {}
@@ -204,6 +206,86 @@ def show_add_car_page():
                 messagebox.showwarning("Bląd.",f"Bląd w roku produkcji. Rok musi być z przedzialu 1900 - {datetime.datetime.now().year}")
                 errors += 1
 
+            mileage = mileage_entry.get()
+            if validator.validate_mileage(year):
+                car_data['mileage'] = mileage
+            elif len(mileage) == 0:
+                messagebox.showwarning("Bląd.", "Dodaj przebieg.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.",f"Bląd w przebiegu. Ma być to liczba, bez np. 'km' oraz bez spacji.")
+                errors += 1
+
+            engine = engine_entry.get()
+            if validator.validate_engine(engine):
+                car_data['engine'] = engine
+            elif len(engine) == 0:
+                messagebox.showwarning("Bląd.", "Dodaj pojemność silnika.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.",f"Bląd w pojemności silnika. Ma to być w formacie np '1600' zamiast '1.6'.")
+                errors += 1
+
+            price = price_entry.get()
+            if validator.validate_price(price):
+                car_data['price'] = price
+            elif len(price) == 0:
+                messagebox.showwarning("Bląd.", "Dodaj cenę.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.",f"Bląd w cenie. Ma to być liczba, bez np. waluty")
+                errors += 1
+
+            author = author_entry.get()
+            if validator.validate_author(author):
+                car_data['author'] = author
+            elif len(author) < 2:
+                messagebox.showwarning("Bląd.", "Dodaj autora.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.",f"Bląd w polu 'Autor'. Ma to być tekst o  maksymalnej dlugości 25 znaków.")
+                errors += 1
+
+            email = email_entry.get()
+            if validator.validate_email(email):
+                car_data['email'] = email
+            elif len(email) < 2:
+                messagebox.showwarning("Bląd.", "Dodaj email.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.",f"Bląd w polu 'Email'.")
+                errors += 1
+
+            phone = phone_entry.get()
+            if validator.validate_phone_number(phone):
+                car_data['phone_number'] = phone
+            elif len(phone) < 9:
+                messagebox.showwarning("Bląd.", "Dodaj numer telefonu.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.",f"Bląd w polu 'Nr telefonu'. \n"
+                                               f" Ma być w postaci np. '532543872', oraz bez numeru kierunkowego.")
+                errors += 1
+
+            city = city_entry.get()
+            if validator.validate_city(city):
+                car_data['city'] = city
+            elif len(city) < 2:
+                messagebox.showwarning("Bląd.", "Dodaj miasto.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.",f"Bląd w polu 'Miasto'. Nazwa miasta może mieć maksymalnei 25 znaków.")
+                errors += 1
+
+            vin = vin_entry.get()
+            if validator.validate_vin(vin):
+                car_data['VIN'] = vin
+            elif len(vin) == 0:
+                messagebox.showwarning("Bląd.", "Dodaj numer VIN.")
+                errors += 1
+            else:
+                messagebox.showwarning("Bląd.",f"Bląd w polu 'VIN'. Nieprawidlowy VIN.")
+                errors += 1
 
             if errors > 0:
                 return
@@ -264,6 +346,11 @@ def show_add_car_page():
                         print(f"Error saving image {image_path}: {e}")
 
                 messagebox.showinfo("Zdjęcia zatwierdzone", f"Zapisano zdjęcia")
+                #TYMCZASOWO
+                car_data['user_id'] = 1
+                car_data['images_directory_path'] = target_folder
+                db.add_new_car(car_data, "rafkot")
+                #TYMCZASOWO
                 show_main_menu_page()
 
 
@@ -278,7 +365,7 @@ def show_add_car_page():
 
         images = []
 
-    show_page2()
+    show_page1()
 
 
 def show_main_menu_page():
@@ -393,7 +480,7 @@ hamburger_menu_image = hamburger_menu_image.subsample(35, 35)
 # show_login_page()
 # window.after(5000, show_main_menu_page)
 
-# show_main_menu_page()
-show_add_car_page()
+show_main_menu_page()
+
 
 window.mainloop()
