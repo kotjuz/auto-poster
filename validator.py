@@ -62,13 +62,15 @@ class Validator():
 
     @staticmethod
     def validate_author(author):
-        if not author.isalpha() or not (2 < len(author) < 15):
+        pattern = r'^(?=.*[A-Za-zĄąĆćĘęŁłÓóŚśŹźŻż0-9])[A-Za-z0-9ĄąĆćĘęŁłÓóŚśŹźŻż .,!\-]{2,25}$'
+        match = re.search(pattern, author)
+        if not match:
             return False
         return True
 
     @staticmethod
     def validate_email(email):
-        pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
+        pattern = r'^[\w\-.]+@([\w-]+\.)+[\w-]{2,4}$'
         match = re.search(pattern, email)
         if not match:
             return False
@@ -78,6 +80,38 @@ class Validator():
     def validate_phone_number(phone_number):
         pattern = r'[4-8][0-9]{8}'
         match = re.search(pattern, phone_number)
+        if not match:
+            return False
+        return True
+
+    @staticmethod
+    def validate_city(city):
+        pattern = r'^(?=.*[A-Za-zĄąĆćĘęŁłÓóŚśŹźŻż0-9])[A-Za-z0-9ĄąĆćĘęŁłÓóŚśŹźŻż .,!\-]{2,25}$'
+        match = re.search(pattern, city)
+        if not match:
+            return False
+        return True
+
+    @staticmethod
+    def validate_vin(vin):
+        pattern = r'^[A-HJ-NPR-Z0-9]{17}$'
+        match = re.search(pattern, vin)
+        if not match:
+            return False
+        return True
+
+    @staticmethod
+    def validate_login(login):
+        pattern = r'^[a-zA-Z0-9]{4,20}$'
+        match = re.search(pattern, login)
+        if not match:
+            return False
+        return True
+
+    @staticmethod
+    def validate_password(password):
+        pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,20}$'
+        match = re.search(pattern, password)
         if not match:
             return False
         return True
