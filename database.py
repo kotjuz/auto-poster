@@ -63,6 +63,24 @@ class Database():
             FOREIGN KEY (user_id) REFERENCES Users(ID)
         )""")
 
+    def check_if_username_taken(self, username):
+        self.c.execute("SELECT username FROM Users WHERE username = ?", (username,))
+        reslut = self.c.fetchone()
+
+        if reslut:
+            return True
+        return False
+
+    def check_if_user_exists(self, username, password):
+        self.c.execute("SELECT password FROM Users WHERE username = ?", (username,))
+        result = self.c.fetchone()
+
+        if result:
+            stored_password = result[0]
+            if stored_password == password:
+                return True
+            return False
+
     def close_connection(self):
         self.conn.close()
 

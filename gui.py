@@ -434,28 +434,32 @@ def show_login_page():
     logo_label_label = Label(empty_label, image=logo_image)
     logo_label_label.place(relx=0.5, rely=0.5, anchor="center")
 
-    # Etykieta loginu
     login_label = Label(window, text="login:", bg="white", pady=5, font=LABELS_FONT)
     login_label.grid(row=1, column=0, sticky="e")
 
-    # Pole tekstowe dla loginu
     login_entry = Entry(window, width=30, font=LABELS_FONT)
     login_entry.grid(row=1, column=1, ipady=3)
-    login_entry.focus_set()  # Ustawienie fokusu na pole loginu
+    login_entry.focus_set()
 
-    # Etykieta hasła
     password_label = Label(window, text="hasło:", bg="white", pady=5, font=LABELS_FONT)
     password_label.grid(row=2, column=0, sticky="e")
 
-    # Pole tekstowe dla hasła
     password_entry = Entry(window, width=30, font=LABELS_FONT, show="*")
     password_entry.grid(row=2, column=1, ipady=3)
 
-    # Przycisk logowania
-    sign_in_button = Button(window, text="Zaloguj się", width=30, height=1, font=BUTTONS_FONT)
+    def log_in():
+        login = login_entry.get()
+        password = password_entry.get()
+        if db.check_if_user_exists(login, password):
+            messagebox.showinfo("Sukces", "Pomyślnie zalogowano.")
+            show_main_menu_page()
+        else:
+            messagebox.showwarning("Bląd.", "Nieprawidlowy login lub haslo.")
+            return
+
+    sign_in_button = Button(window, text="Zaloguj się", width=30, height=1, font=BUTTONS_FONT, command=log_in)
     sign_in_button.grid(row=3, column=1)
 
-    # Przycisk rejestracji
     sign_up_button = Button(window, text="Zarejestruj się", width=30, height=1, font=BUTTONS_FONT, command=show_sign_up_page)
     sign_up_button.grid(row=4, column=1)
 
@@ -500,6 +504,10 @@ def show_sign_up_page():
             messagebox.showwarning("Bląd.", "Bląd w polu 'login'. Login może zawierać tylko male, duże litery (bez polskich znaków) \n "
                                             "oraz cyfry. Dlugość musi mieścić się w przedziale 4-20 znaków.")
             errors += 1
+        elif db.check_if_username_taken(login):
+            messagebox.showwarning("Bląd.", "Użytkownik z takim loginem już istnieje. Wybierz innny.")
+            errors += 1
+
 
         if len(password) == 0:
             messagebox.showwarning("Bląd.", "Podaj haslo.")
