@@ -332,7 +332,8 @@ def show_add_car_page():
             if not images:
                 messagebox.showwarning("Brak zdjęć", "Dodaj zdjęcia.")
             else:
-                target_folder = os.path.join(os.getcwd(), "uploaded_images")
+                # target_folder = os.path.join(os.getcwd(), "uploaded_images")
+                target_folder = os.path.join(os.getcwd(), f"uploaded_images/{car_data['VIN']}")
                 os.makedirs(target_folder, exist_ok=True)
 
                 for image_path in images:
