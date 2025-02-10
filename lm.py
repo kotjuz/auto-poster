@@ -78,16 +78,16 @@ def click_year_form(driver, year_form):
         click_year_form(driver, year_form)
 
 title = "Peugeot 308"
-imie = 'Rafal'
-email = 'rkotarski10@gmail.com'
-telefon = '537519199'
+imie = 'Mark'
+email = 'test@gmail.com'
+telefon = '123456789'
 ulica = 'Konin'
 miasto = 'Konin'
 mileage = '176500'
 pojemnosc = '1600'
-price = '40000'
+price = '39500'
 year = '2017'
-des = """Witam,
+descripiton = """Witam,
 Mam na sprzedaż pięknego Peugeota 308 w wersji po lifcie. Samochód jest w całości w oryginalnym lakierze i prezentuje się naprawdę świetnie. Ma nowe opony letnie Michelin i ładne alufelgi, które doskonale komponują się z jego wyglądem.
 
 Peugeot posiada bogate wyposażenie, w tym:
@@ -103,9 +103,9 @@ CarPlay i Android Auto.
 Auto posiada dynamiczny i niezawodny silnik diesla 1.6 o mocy 120 KM oraz 6-biegową skrzynie biegów.
 Spalanie jest bardzo niskie – około 5 l/100 km w trasie i 6 l/100 km w mieście.
 
-Zapraszam do kontaktu oraz na jazdę próbną. Kontakt: 537-519-199"""
+Zapraszam do kontaktu oraz na jazdę próbną. Kontakt:"""
 
-descripiton = "Ladny"
+desc = "Ladny"
 
 service = Service(executable_path="chromedriver.exe")
 driver = webdriver.Chrome(service=service)
@@ -222,7 +222,7 @@ time.sleep(0.5)
 upload_images(driver)
 time.sleep(0.5)
 checkbox = driver.find_element(By.XPATH, '//*[@id="multicont_script_477"]/section[2]/form/div[4]/div/div[4]/label[1]/span[1]/input')
-print(checkbox.get_attribute('outerHTML'))
+
 driver.execute_script("arguments[0].click();", checkbox)
 
 
