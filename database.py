@@ -30,8 +30,8 @@ class Database():
         """, car_data)
         self.conn.commit()
 
-    def delete_car(self, car_data):
-        self.c.execute("DELETE from Cars WHERE VIN = ?", (car_data["VIN"],))
+    def delete_car(self, vin):
+        self.c.execute("DELETE from Cars WHERE VIN = ?", (vin,))
         self.conn.commit()
 
     def create_empty_database(self):
