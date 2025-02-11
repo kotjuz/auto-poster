@@ -453,7 +453,7 @@ def show_login_page():
         password = password_entry.get()
         if db.check_if_user_exists(login, password):
             messagebox.showinfo("Sukces", "Pomyślnie zalogowano.")
-            user = User(login)
+            user = User(login, db)
             show_main_menu_page(user)
         else:
             messagebox.showwarning("Bląd.", "Nieprawidlowy login lub haslo.")
