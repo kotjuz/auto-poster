@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 from validator import Validator
 from database import Database
+from user import User
 import datetime
 import os
 
@@ -14,11 +15,11 @@ validator = Validator()
 db = Database()
 
 
-def show_add_car_page():
+def show_add_car_page(user):
     car_data = {}
     def show_page1():
         clear_screen()
-        home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=show_main_menu_page)
+        home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=lambda: show_main_menu_page(user))
         home_button.grid(row=0, column=0, sticky="n")
 
         empty_frame = Frame(window, width=590, height=100, bg="white")
@@ -349,11 +350,11 @@ def show_add_car_page():
 
                 messagebox.showinfo("Zdjęcia zatwierdzone", f"Zapisano zdjęcia")
                 #TYMCZASOWO
-                car_data['user_id'] = 1
+                car_data['user_id'] = user.ID
                 car_data['images_directory_path'] = target_folder
-                db.add_new_car(car_data, "rafkot")
+                db.add_new_car(car_data, user.login)
                 #TYMCZASOWO
-                show_main_menu_page()
+                show_main_menu_page(user)
 
 
         upload_button = Button(window, text="Załącz zdjęcia", command=upload_images, font=("Arial", 12))
@@ -370,7 +371,7 @@ def show_add_car_page():
     show_page1()
 
 
-def show_main_menu_page():
+def show_main_menu_page(user):
     def toggle_menu():
         if menu_frame.winfo_ismapped():
             menu_frame.place_forget()
@@ -395,7 +396,7 @@ def show_main_menu_page():
     menu_frame = Frame(window, bg="lightgray", width=50, height=100)
 
     # Elementy rozwijanego menu
-    menu_label = Label(menu_frame, text="Uzytkownik", font=BUTTONS_FONT, bg="lightgray")
+    menu_label = Label(menu_frame, text=user.login, font=BUTTONS_FONT, bg="lightgray")
     menu_label.grid(row=0, column=0, padx=10, pady=10)
 
     menu_button1 = Button(menu_frame, text="Wyloguj", font=BUTTONS_FONT)
@@ -414,7 +415,7 @@ def show_main_menu_page():
     main_menu_frame.place(x=120, y=450)
 
     # Elementy menu glownego
-    add_car_button = Button(main_menu_frame, text="Dodaj auto", font=MAIN_MENU_BUTTONS_FONT, width=30, command=show_add_car_page)
+    add_car_button = Button(main_menu_frame, text="Dodaj auto", font=MAIN_MENU_BUTTONS_FONT, width=30, command=lambda: show_add_car_page(user))
     add_car_button.grid(row=0, column=0, padx=10, pady=4)
 
     post_car_button = Button(main_menu_frame, text="Ogloś auto", font=MAIN_MENU_BUTTONS_FONT, width=30)
@@ -452,7 +453,8 @@ def show_login_page():
         password = password_entry.get()
         if db.check_if_user_exists(login, password):
             messagebox.showinfo("Sukces", "Pomyślnie zalogowano.")
-            show_main_menu_page()
+            user = User(login)
+            show_main_menu_page(user)
         else:
             messagebox.showwarning("Bląd.", "Nieprawidlowy login lub haslo.")
             return
