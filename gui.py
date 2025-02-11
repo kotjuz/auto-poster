@@ -14,6 +14,11 @@ MAIN_MENU_BUTTONS_FONT = ("Arial", 18)
 validator = Validator()
 db = Database()
 
+def log_out():
+    answer = messagebox.askyesno(message="Czy na pewno chcesz się wylogować?")
+    if answer:
+        show_login_page()
+    return
 
 def show_add_car_page(user):
     car_data = {}
@@ -399,7 +404,7 @@ def show_main_menu_page(user):
     menu_label = Label(menu_frame, text=user.login, font=BUTTONS_FONT, bg="lightgray")
     menu_label.grid(row=0, column=0, padx=10, pady=10)
 
-    menu_button1 = Button(menu_frame, text="Wyloguj", font=BUTTONS_FONT)
+    menu_button1 = Button(menu_frame, text="Wyloguj", font=BUTTONS_FONT, command=log_out)
     menu_button1.grid(row=1, column=0, pady=10, padx=10)
 
     # Logo aplikacji
@@ -549,7 +554,7 @@ def clear_screen():
 
 
 window = Tk()
-window.title("Auto wystawiacz")
+window.title("Auto Poster")
 window.config(bg="white", padx=20, pady=20, width=700, height=750)
 window.minsize(700, 750)
 window.maxsize(700, 750)
