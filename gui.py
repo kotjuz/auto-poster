@@ -523,7 +523,7 @@ def show_sign_up_page():
         if len(email) == 0:
             messagebox.showwarning("Bląd.", "Podaj email.")
             errors += 1
-        elif not validator.validate_password(password):
+        elif not validator.validate_email(email):
             messagebox.showwarning("Bląd.",
                                    "Bląd w polu 'email'. Niepoprawny adres email.")
             errors += 1
