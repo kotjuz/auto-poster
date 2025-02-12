@@ -16,3 +16,6 @@ class User:
 
     def pull_id(self):
         return self.db.get_user_id(self.login)
+
+    def pull_all_cars(self):
+        return self.db.get_user_cars(self.login)
