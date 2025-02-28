@@ -1,7 +1,7 @@
 import sqlite3
 
 
-class Database():
+class Database:
     def __init__(self):
         self.conn = sqlite3.connect('auto-poster2.db')
         self.c = self.conn.cursor()

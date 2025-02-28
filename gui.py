@@ -578,7 +578,7 @@ def show_post_car_page(user):
     home_button.grid(row=0, column=0)
 
     canvas = Canvas(window, width=655, height=730)
-    scrollbar = Scrollbar(window, orient="vertical", command=canvas.yview)
+    scrollbar = Scrollbar(window, orient="vertical", bg="white", command=canvas.yview)
     frame_container = Frame(canvas, bg="white")
 
     def on_mouse_scroll(event):
@@ -593,6 +593,7 @@ def show_post_car_page(user):
     canvas.bind_all("<MouseWheel>", on_mouse_scroll)
 
     products_data = user.pull_all_cars()
+    print(products_data)
     if products_data:
         formated_data = [(data[1], data[3]) for data in products_data]
 
@@ -607,6 +608,7 @@ def show_post_car_page(user):
             if not img:
                 img = no_photo_image
 
+
             label_image = Label(item_frame, image=img, bg="white", bd=1, relief="solid")
             label_image.image = img
             label_image.pack(side="left", padx=10, pady=5)
@@ -617,8 +619,25 @@ def show_post_car_page(user):
             label_name = Label(text_frame, text=data[0], font=LABELS_FONT, bg="white", anchor="w")
             label_name.pack(fill="x")
 
-        empty_frame = Frame(frame_container, height=100, bg="white")
+            left_frame = Frame(item_frame, bg="white")
+            left_frame.pack(side="left", padx=10, pady=5)
+
+            checkbox_var = IntVar()
+            checkbox = Checkbutton(left_frame, variable=checkbox_var, bg="white")
+            checkbox.pack(side="left")
+
+
+
+            label_checkbox_image = Label(left_frame, image=checkbox_image, bg="white", bd=1, relief="solid")
+            label_checkbox_image.image = checkbox_image
+            label_checkbox_image.pack(side="left", padx=5)
+
+        my_cars_button = Button(frame_container, text="Ogłoś", font=LABELS_FONT, width=30)
+        my_cars_button.pack(side="top", padx=10, pady=5)
+        empty_frame = Frame(frame_container, height=100, width=655, bg="white")
         empty_frame.pack(fill="x", pady=5)
+
+
 
 def clear_screen():
     for widget in window.winfo_children():
@@ -645,6 +664,9 @@ back_arrow_image = back_arrow_image.subsample(25, 25)
 
 no_photo_image = PhotoImage(file="icons/no_photo_img.png")
 no_photo_image = no_photo_image.subsample(25, 25)
+
+checkbox_image = PhotoImage(file="icons/lm_logo_img.png")
+checkbox_image = checkbox_image.subsample(15, 15)
 
 show_login_page()
 # window.after(5000, show_main_menu_page)
