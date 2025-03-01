@@ -14,6 +14,11 @@ MAIN_MENU_BUTTONS_FONT = ("Arial", 18)
 validator = Validator()
 db = Database()
 
+def log_out():
+    answer = messagebox.askyesno(message="Czy na pewno chcesz się wylogować?")
+    if answer:
+        show_login_page()
+    return
 
 def show_add_car_page(user):
     car_data = {}
@@ -126,7 +131,7 @@ def show_add_car_page(user):
 
     def show_page2():
         clear_screen()
-        home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=show_main_menu_page)
+        home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=lambda: show_main_menu_page(user))
         home_button.grid(row=0, column=0, sticky="n")
 
         empty_frame = Frame(window, width=590, height=100, bg="white")
@@ -300,7 +305,7 @@ def show_add_car_page(user):
 
     def show_page3():
         clear_screen()
-        home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=show_main_menu_page)
+        home_button = Button(window, width=30, height=30, bg="white",  image=home_image, command=lambda: show_main_menu_page(user))
         home_button.place(x=0, y=0)
         def upload_images():
             file_paths = filedialog.askopenfilenames(
@@ -399,7 +404,7 @@ def show_main_menu_page(user):
     menu_label = Label(menu_frame, text=user.login, font=BUTTONS_FONT, bg="lightgray")
     menu_label.grid(row=0, column=0, padx=10, pady=10)
 
-    menu_button1 = Button(menu_frame, text="Wyloguj", font=BUTTONS_FONT)
+    menu_button1 = Button(menu_frame, text="Wyloguj", font=BUTTONS_FONT, command=log_out)
     menu_button1.grid(row=1, column=0, pady=10, padx=10)
 
     # Logo aplikacji
@@ -418,7 +423,7 @@ def show_main_menu_page(user):
     add_car_button = Button(main_menu_frame, text="Dodaj auto", font=MAIN_MENU_BUTTONS_FONT, width=30, command=lambda: show_add_car_page(user))
     add_car_button.grid(row=0, column=0, padx=10, pady=4)
 
-    post_car_button = Button(main_menu_frame, text="Ogloś auto", font=MAIN_MENU_BUTTONS_FONT, width=30)
+    post_car_button = Button(main_menu_frame, text="Ogloś auto", font=MAIN_MENU_BUTTONS_FONT, width=30, command=lambda: show_post_car_page(user))
     post_car_button.grid(row=1, column=0, padx=10, pady=4)
 
     my_cars_button = Button(main_menu_frame, text="Moje auta", font=MAIN_MENU_BUTTONS_FONT, width=30)
@@ -453,7 +458,7 @@ def show_login_page():
         password = password_entry.get()
         if db.check_if_user_exists(login, password):
             messagebox.showinfo("Sukces", "Pomyślnie zalogowano.")
-            user = User(login)
+            user = User(login, db)
             show_main_menu_page(user)
         else:
             messagebox.showwarning("Bląd.", "Nieprawidlowy login lub haslo.")
@@ -523,7 +528,7 @@ def show_sign_up_page():
         if len(email) == 0:
             messagebox.showwarning("Bląd.", "Podaj email.")
             errors += 1
-        elif not validator.validate_password(password):
+        elif not validator.validate_email(email):
             messagebox.showwarning("Bląd.",
                                    "Bląd w polu 'email'. Niepoprawny adres email.")
             errors += 1
@@ -542,6 +547,97 @@ def show_sign_up_page():
     go_back_button = Button(window, width=30, height=30, bg="white",  image=back_arrow_image, command=show_login_page)
     go_back_button.place(x=0, y=0)
 
+def load_first_image(folder_path, size=(250, 200)):
+    try:
+        images = [f for f in os.listdir(folder_path) if f.lower().endswith((".png", ".jpg", ".jpeg"))]
+        if not images:
+            return None
+
+        img_path = os.path.join(folder_path, images[0])
+        img = Image.open(img_path)
+
+        img.thumbnail(size, Image.Resampling.LANCZOS)
+
+        final_img = Image.new("RGB", size, (255, 255, 255))
+        x_offset = (size[0] - img.width) // 2
+        y_offset = (size[1] - img.height) // 2
+        final_img.paste(img, (x_offset, y_offset))
+
+        return ImageTk.PhotoImage(final_img)
+
+    except Exception as e:
+        print(f"Błąd ładowania obrazu: {e}")
+        return None
+
+
+def show_post_car_page(user):
+    clear_screen()
+
+    home_button = Button(window, width=30, height=30, bg="white", image=home_image,
+                         command=lambda: show_main_menu_page(user))
+    home_button.grid(row=0, column=0)
+
+    canvas = Canvas(window, width=655, height=730)
+    scrollbar = Scrollbar(window, orient="vertical", bg="white", command=canvas.yview)
+    frame_container = Frame(canvas, bg="white")
+
+    def on_mouse_scroll(event):
+        canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
+    frame_container.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+    canvas.create_window((0, 0), window=frame_container, anchor="nw", width=640)
+
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.grid(row=1, column=0, sticky="nsew")
+    scrollbar.grid(row=1, column=1, sticky="ns")
+    canvas.bind_all("<MouseWheel>", on_mouse_scroll)
+
+    products_data = user.pull_all_cars()
+    print(products_data)
+    if products_data:
+        formated_data = [(data[1], data[3]) for data in products_data]
+
+        for data in formated_data:
+            item_frame = Frame(frame_container, bd=1, relief="solid", padx=10, pady=5, bg="white", width=655,
+                               height=200)
+            item_frame.pack(fill="x", pady=5)
+            item_frame.pack_propagate(False)
+
+            image_folder = os.path.abspath(data[1])
+            img = load_first_image(image_folder)
+            if not img:
+                img = no_photo_image
+
+
+            label_image = Label(item_frame, image=img, bg="white", bd=1, relief="solid")
+            label_image.image = img
+            label_image.pack(side="left", padx=10, pady=5)
+
+            text_frame = Frame(item_frame, bg="white")
+            text_frame.pack(side="left", padx=10, pady=5, fill="both", expand=True)
+
+            label_name = Label(text_frame, text=data[0], font=LABELS_FONT, bg="white", anchor="w")
+            label_name.pack(fill="x")
+
+            left_frame = Frame(item_frame, bg="white")
+            left_frame.pack(side="left", padx=10, pady=5)
+
+            checkbox_var = IntVar()
+            checkbox = Checkbutton(left_frame, variable=checkbox_var, bg="white")
+            checkbox.pack(side="left")
+
+
+
+            label_checkbox_image = Label(left_frame, image=checkbox_image, bg="white", bd=1, relief="solid")
+            label_checkbox_image.image = checkbox_image
+            label_checkbox_image.pack(side="left", padx=5)
+
+        my_cars_button = Button(frame_container, text="Ogłoś", font=LABELS_FONT, width=30)
+        my_cars_button.pack(side="top", padx=10, pady=5)
+        empty_frame = Frame(frame_container, height=100, width=655, bg="white")
+        empty_frame.pack(fill="x", pady=5)
+
+
 
 def clear_screen():
     for widget in window.winfo_children():
@@ -549,7 +645,7 @@ def clear_screen():
 
 
 window = Tk()
-window.title("Auto wystawiacz")
+window.title("Auto Poster")
 window.config(bg="white", padx=20, pady=20, width=700, height=750)
 window.minsize(700, 750)
 window.maxsize(700, 750)
@@ -566,10 +662,17 @@ hamburger_menu_image = hamburger_menu_image.subsample(35, 35)
 back_arrow_image = PhotoImage(file="icons/back_arrow.png")
 back_arrow_image = back_arrow_image.subsample(25, 25)
 
-# show_login_page()
-# window.after(5000, show_main_menu_page)
+no_photo_image = PhotoImage(file="icons/no_photo_img.png")
+no_photo_image = no_photo_image.subsample(25, 25)
+
+checkbox_image = PhotoImage(file="icons/lm_logo_img.png")
+checkbox_image = checkbox_image.subsample(15, 15)
 
 show_login_page()
+# window.after(5000, show_main_menu_page)
+# user = User("admin", db)
+# show_main_menu_page(user)
+
 
 
 window.mainloop()

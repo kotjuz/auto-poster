@@ -1,9 +1,9 @@
 import sqlite3
 
 
-class Database():
+class Database:
     def __init__(self):
-        self.conn = sqlite3.connect('auto-poster.db')
+        self.conn = sqlite3.connect('auto-poster2.db')
         self.c = self.conn.cursor()
         self.c.execute("PRAGMA foreign_keys = ON")
 
@@ -18,6 +18,7 @@ class Database():
 
         self.c.execute("""CREATE TABLE Cars(
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT,
             VIN TEXT,
             images_directory_path TEXT,
             description TEXT,
@@ -53,10 +54,10 @@ class Database():
         car_data["username"] = username
         self.c.execute("""
         INSERT INTO Cars (
-            VIN, images_directory_path, description, car_brand, car_body, fuel_type,
+            title, VIN, images_directory_path, description, car_brand, car_body, fuel_type,
             year, miles, engine, price, author, email, phone_number, city, user_id
         ) VALUES (
-            :VIN, :images_directory_path, :description, :brand, :body, :fuel,
+            :title, :VIN, :images_directory_path, :description, :brand, :body, :fuel,
             :year, :mileage, :engine, :price, :author, :email, :phone_number, :city, :user_id
                     )
         """, car_data)
@@ -92,6 +93,12 @@ class Database():
     def get_user_id(self, username):
         self.c.execute("SELECT ID FROM Users WHERE username = ?", (username,))
         return self.c.fetchone()[0]
+
+    def get_user_cars(self, username):
+        self.c.execute("""SELECT Cars.* FROM Cars
+         JOIN Users ON Cars.user_id = Users.ID
+         WHERE username = ?""", (username,))
+        return self.c.fetchall()
 
     def close_connection(self):
         self.conn.close()
