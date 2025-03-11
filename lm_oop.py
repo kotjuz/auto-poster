@@ -14,6 +14,26 @@ class LmAutomater:
         # self.driver.minimize_window()
         self.all_cars_data = all_cars_data
 
+    def change_year_table_page(self):
+        if self.tds[0].text > str(self.all_cars_data[8]):
+            self.previous_year_button.click()
+            return True
+        elif self.tds[9].text < str(self.all_cars_data[8]):
+            self.next_year_button.click()
+            return True
+        return False
+
+    def click_year_form(self, year_form):
+        self.driver.execute_script("window.scrollBy(0, -200);")
+        try:
+            year_form.click()
+            time.sleep(1)
+            self.driver.execute_script("window.scrollBy(0, -100);")
+            self.driver.execute_script("arguments[0].click();", year_form)
+        except:
+            self.click_year_form(year_form)
+
+
     def find_and_click_option(self, ul_selector, car_name):
         try:
             ul_element = self.driver.find_element(By.XPATH, ul_selector)
@@ -23,7 +43,7 @@ class LmAutomater:
                     self.driver.execute_script("arguments[0].scrollIntoView(true);", item)
                     self.driver.execute_script("arguments[0].click();", item)
                     return
-            self.find_and_click_option(self.driver, ul_selector, car_name)
+            self.find_and_click_option(ul_selector, car_name)
         except Exception as e:
             print(f"Błąd podczas wyszukiwania opcji: {e}")
 
@@ -84,6 +104,26 @@ class LmAutomater:
             self.driver.execute_script("arguments[0].click();", type_of_form.find_element(By.TAG_NAME, "input"))
             self.find_and_click_option(ul_selectors[i], inputs[i])
 
+        year_form = items[8].find_element(By.TAG_NAME, 'input')
+        self.click_year_form(year_form)
+
+        time.sleep(0.5)
+        self.previous_year_button = self.driver.find_element(By.XPATH, "//button[@aria-label='Poprzedni rok']")
+        self.next_year_button = self.driver.find_element(By.XPATH, "//button[@aria-label='Następny rok']")
+
+        year_table = self.driver.find_element(By.CSS_SELECTOR, "table.el-year-table")
+
+        self.tds = year_table.find_elements(By.TAG_NAME, "td")
+
+        time.sleep(1)
+        while self.change_year_table_page():
+            time.sleep(1)
+            self.change_year_table_page()
+
+        for td in self.tds:
+            if td.text == str(self.all_cars_data[8]):
+                td.click()
+                self.driver.execute_script("arguments[0].click();", td)
 
         time.sleep(100)
         self.driver.quit()
@@ -91,5 +131,5 @@ class LmAutomater:
 
 
 
-l = LmAutomater((1, 'Peugeot', 'VF111111111111111', 'C:\\Users\\rkota\\Desktop\\pythonprojekty\\auto-wystawiacz\\uploaded_images/VF111111111111111', 'Descri', 'Peugeot', 'kombi', 'diesel', 2017, 176500, 1690, 39500, 'Rss', 'admin@gmail.com', '123456789', 'Warszawa', 1))
+l = LmAutomater((1, 'Peugeot', 'VF111111111111111', 'C:\\Users\\rkota\\Desktop\\pythonprojekty\\auto-wystawiacz\\uploaded_images/VF111111111111111', 'Descri', 'Peugeot', 'kombi', 'diesel', 2008, 176500, 1690, 39500, 'Rss', 'admin@gmail.com', '123456789', 'Warszawa', 1))
 l.post_all_cars()
