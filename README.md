@@ -22,8 +22,8 @@ Auto Poster is a **desktop application** written in Python, designed for **small
 ## 🚀 Installation
 1. Clone this repository:
    ```sh
-   git clone https://github.com/your-repo/car-commission-automation.git
-   cd car-commission-automation
+   git clone https://github.com/kotjuz/auto-poster.git
+   cd auto-poster
    ```
 2. Install dependencies:
    ```sh
