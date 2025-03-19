@@ -1,7 +1,7 @@
-# 🚗 Car Commission Automation
+# 🚗 Auto Poster
 
 ## 📝 Description
-Car Commission Automation is a **desktop application** written in Python, designed for **small and medium-sized car commission companies**. The application **automates** the process of posting car advertisements on websites that **do not provide an API**. It was developed after interviewing potential customers to ensure it meets their needs effectively.
+Auto Poster is a **desktop application** written in Python, designed for **small and medium-sized car commission companies**. The application **automates** the process of posting car advertisements on websites that **do not provide an API**. It was developed after interviewing potential customers to ensure it meets their needs effectively.
 
 ## ✨ Features
 ✅ **User Authentication**: Log in or create a new account.
