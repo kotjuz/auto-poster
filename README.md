@@ -47,4 +47,4 @@ Auto Poster is a **desktop application** written in Python, designed for **small
 💡 Feel free to **fork** this project and submit **pull requests** for improvements or bug fixes.
 
 ## 📬 Contact
-For inquiries, please contact **[Your Name]** at **[your.email@example.com]** ✉️
+For inquiries, please contact  **[rkotarski10@gmail.com]** ✉️
