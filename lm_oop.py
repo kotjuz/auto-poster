@@ -138,8 +138,27 @@ class LmAutomater:
             input_element.send_keys(inputs[i])
 
         self.next_page_button = self.driver.find_element(By.XPATH, "//button[contains(@class, 'el-button--primary')]")
-        # time.sleep(2)
+
+
         self.go_to_next_page()
+        other_divs = self.driver.find_elements(By.XPATH,
+                                          "//div[div[contains(@class, 'form__small_info')]]/div[position()>1]")
+
+        inputs = [self.all_cars_data[12], self.all_cars_data[13], self.all_cars_data[14], self.all_cars_data[15], self.all_cars_data[15]]
+        for i in range(5):
+            input_element = other_divs[i].find_element(By.TAG_NAME, "input")
+            input_element.send_keys(inputs[i])
+
+        type_of_form = self.driver.find_element(By.XPATH,
+                                           '//*[@id="multicont_script_477"]/section[2]/form/div[3]/div/div[7]/div/div/div/input')
+        self.driver.execute_script("arguments[0].click();", type_of_form)
+        self.find_and_click_option('/html/body/div[21]/div[1]/div[1]/ul', 'Konin')
+
+        self.next_page_button = self.driver.find_element(By.XPATH,
+                                               '//*[@id="multicont_script_477"]/section[2]/form/div[7]/div[2]/button')
+
+        self.go_to_next_page()
+
 
         time.sleep(100)
         self.driver.quit()
