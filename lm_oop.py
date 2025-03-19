@@ -47,6 +47,13 @@ class LmAutomater:
         except Exception as e:
             print(f"Błąd podczas wyszukiwania opcji: {e}")
 
+    def go_to_next_page(self):
+        try:
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", self.next_page_button)
+            self.next_page_button.click()
+        except:
+            self.go_to_next_page(self.driver, self.next_page_button)
+
 
     def upload_images(self):
         folder_path = os.path.join(self.all_cars_data[3])
@@ -124,6 +131,15 @@ class LmAutomater:
             if td.text == str(self.all_cars_data[8]):
                 td.click()
                 self.driver.execute_script("arguments[0].click();", td)
+
+        inputs = [self.all_cars_data[9], self.all_cars_data[10], self.all_cars_data[11]]
+        for i in range(3):
+            input_element = items[i + 10].find_element(By.TAG_NAME, "input")
+            input_element.send_keys(inputs[i])
+
+        self.next_page_button = self.driver.find_element(By.XPATH, "//button[contains(@class, 'el-button--primary')]")
+        # time.sleep(2)
+        self.go_to_next_page()
 
         time.sleep(100)
         self.driver.quit()
