@@ -14,6 +14,26 @@ class LmAutomater:
         # self.driver.minimize_window()
         self.all_cars_data = all_cars_data
 
+    def upload_images(self, folder_name="images"):
+        folder_path = os.path.join(os.getcwd(), folder_name)
+        image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(('jpg', 'jpeg', 'png', 'gif'))]
+
+        if not image_files:
+            return
+
+        for image in image_files:
+            file_input = self.driver.find_element(By.CSS_SELECTOR, "input[type='file']")
+
+            image_path = os.path.join(folder_path, image)
+
+            self.driver.execute_script("arguments[0].value = '';", file_input)
+
+            file_input.send_keys(image_path)
+            time.sleep(1)
+
+
+
+
     def change_year_table_page(self):
         if self.tds[0].text > str(self.all_cars_data[8]):
             self.previous_year_button.click()
@@ -36,7 +56,8 @@ class LmAutomater:
 
     def find_and_click_option(self, ul_selector, car_name):
         try:
-            ul_element = self.driver.find_element(By.XPATH, ul_selector)
+            wait = WebDriverWait(self.driver, 10)
+            ul_element = wait.until(EC.visibility_of_element_located((By.XPATH, ul_selector)))
             list_items = ul_element.find_elements(By.CSS_SELECTOR, "li.el-select-dropdown__item")
             for item in list_items:
                 if car_name in item.text:
@@ -115,10 +136,10 @@ class LmAutomater:
         self.click_year_form(year_form)
 
         time.sleep(0.5)
-        self.previous_year_button = self.driver.find_element(By.XPATH, "//button[@aria-label='Poprzedni rok']")
-        self.next_year_button = self.driver.find_element(By.XPATH, "//button[@aria-label='Następny rok']")
+        self.previous_year_button = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[@aria-label='Poprzedni rok']")))
+        self.next_year_button = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[@aria-label='Następny rok']")))
 
-        year_table = self.driver.find_element(By.CSS_SELECTOR, "table.el-year-table")
+        year_table = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "table.el-year-table")))
 
         self.tds = year_table.find_elements(By.TAG_NAME, "td")
 
@@ -137,28 +158,33 @@ class LmAutomater:
             input_element = items[i + 10].find_element(By.TAG_NAME, "input")
             input_element.send_keys(inputs[i])
 
-        self.next_page_button = self.driver.find_element(By.XPATH, "//button[contains(@class, 'el-button--primary')]")
+        self.next_page_button = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[contains(@class, 'el-button--primary')]")))
 
 
         self.go_to_next_page()
-        other_divs = self.driver.find_elements(By.XPATH,
-                                          "//div[div[contains(@class, 'form__small_info')]]/div[position()>1]")
+        other_divs = wait.until(EC.visibility_of_all_elements_located((By.XPATH,
+                                          "//div[div[contains(@class, 'form__small_info')]]/div[position()>1]")))
 
         inputs = [self.all_cars_data[12], self.all_cars_data[13], self.all_cars_data[14], self.all_cars_data[15], self.all_cars_data[15]]
         for i in range(5):
             input_element = other_divs[i].find_element(By.TAG_NAME, "input")
             input_element.send_keys(inputs[i])
 
-        type_of_form = self.driver.find_element(By.XPATH,
-                                           '//*[@id="multicont_script_477"]/section[2]/form/div[3]/div/div[7]/div/div/div/input')
+        type_of_form = wait.until(EC.visibility_of_element_located((By.XPATH,
+                                           '//*[@id="multicont_script_477"]/section[2]/form/div[3]/div/div[7]/div/div/div/input')))
         self.driver.execute_script("arguments[0].click();", type_of_form)
         self.find_and_click_option('/html/body/div[21]/div[1]/div[1]/ul', 'Konin')
 
-        self.next_page_button = self.driver.find_element(By.XPATH,
-                                               '//*[@id="multicont_script_477"]/section[2]/form/div[7]/div[2]/button')
+        self.next_page_button = wait.until(EC.visibility_of_element_located((By.XPATH,
+                                               '//*[@id="multicont_script_477"]/section[2]/form/div[7]/div[2]/button')))
 
         self.go_to_next_page()
 
+        self.upload_images()
+        checkbox = self.driver.find_element(By.XPATH,
+                                       '//*[@id="multicont_script_477"]/section[2]/form/div[4]/div/div[4]/label[1]/span[1]/input')
+
+        self.driver.execute_script("arguments[0].click();", checkbox)
 
         time.sleep(100)
         self.driver.quit()
